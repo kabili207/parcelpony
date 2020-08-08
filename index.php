@@ -176,20 +176,20 @@
 									
 									if ($mydata->trackings->expected_delivery != null){
 										$expTS = $mydata->trackings->expected_delivery;
-										$expectedDelivery = "Expected Delivery is " . date("m/d/y", strtotime($expTS));
+										$expectedDelivery = "Expected Delivery is " . date("m/d/Y", strtotime($expTS));
 										$scheduled = true;
 									} else {
 										if ($mydata->trackings->tag == "Delivered") {
-											$shipTS = $mydata->trackings->shipment_delivery_date;
-											$shipmentDelivery = date("m/d/y", strtotime($shipTS));
-											
+											$shipTS = new DateTime($mydata->trackings->shipment_delivery_date);
+											$shipmentDelivery = $shipTS->format("m/d/Y");
+											$shipmentAge = date_diff($shipTS, $now);
 											if ($shipmentDelivery == $today) {
 												$expectedDelivery = "Today";
-											} else {											
-												$expectedDelivery = "About " . $mydata->trackings->delivery_time . " Days Ago";
+											} else {
+												$expectedDelivery = "About " . $shipmentAge->format('%a') . " Days Ago";
 											}
 										} else {
-											$expectedDelivery = $mydata->trackings->delivery_time . " Days Ago";  
+											$expectedDelivery = $mydata->trackings->delivery_time . " Days Ago";
 										}
 									}
 									
